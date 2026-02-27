@@ -1,0 +1,40 @@
+repo: "owner/name"
+enabled: true
+branch_prefix: "agent/"
+default_base_branch: "main"
+loop:
+  enabled: false
+  mode: "continuous"
+  max_iterations_per_session: 20
+  max_fail_iterations: 2
+  post_merge_rescan: true
+merge:
+  enabled: false
+  auto_merge: false
+  strategy: "api"
+  method: "squash"
+  require_green_checks: true
+  require_judge_pass: true
+  require_manual_confirm_in_gui: false
+budgets:
+  max_prs_per_day: 2
+  max_minutes_per_day: 120
+  max_concurrent_runs: 1
+jobs:
+  polish:
+    scan: ["readme", "issues", "tests", "dependencies"]
+    goals: ["Improve docs clarity", "Fix obvious bugs", "Add missing tests for changed code"]
+    acceptance: ["All unit tests pass", "Playwright smoke passes (if enabled)"]
+    commands: ["python -m pytest -q"]
+    playwright:
+      enabled: true
+      mode: "github_pages"
+      url: "https://owner.github.io/repo/"
+      local_command: ""
+      local_ready_url: ""
+      smoke: ["load_home", "click_nav"]
+      screenshots: true
+    pr:
+      labels: ["agent"]
+      reviewers: []
+      codex_review_comment: false
